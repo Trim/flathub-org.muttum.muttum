@@ -151,6 +151,7 @@ def main():
 
     pr_id = int(github_event["issue"]["number"])
     pr = flathub.get_pull(pr_id)
+    pr_head_sha = str(pr.head.sha)
     pr_author = pr.user.login
     branch = pr.head.label.split(":")[1]
     fork_url = pr.head.repo.clone_url
@@ -168,7 +169,12 @@ def main():
     tmpdir = tempfile.TemporaryDirectory()
     print(f"Cloning {fork_url} (branch: {branch})")
     clone = pygit2.clone_repository(fork_url, tmpdir.name, checkout_branch=branch)
+    clone_head_sha = str(clone.head.target)
     clone.submodules.update(init=True)
+
+    print(f"PR head SHA: {pr_head_sha}")
+    print(f"Clone head SHA: {clone_head_sha}")
+    assert clone_head_sha == pr_head_sha
 
     manifest_file, appid = detect_appid(tmpdir.name)
     if manifest_file is None or appid is None:
