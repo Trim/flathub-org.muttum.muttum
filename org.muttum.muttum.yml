@@ -58,20 +58,24 @@ modules:
       - >-
         cat final/english-words.* final/american-words.*
         | sort -u
-        | iconv -f iso-8859-1 -t utf-8 -o /app/share/org.muttum.muttum/en_US
+        | iconv -f iso-8859-1 -t utf-8 -o en_US
+      - install -Dm644 en_US /app/share/org.muttum.muttum/en_US
       - >-
         cat final/english-words.* final/australian-words.*
         | sort -u
-        | iconv -f iso-8859-1 -t utf-8 -o /app/share/org.muttum.muttum/en_AU
+        | iconv -f iso-8859-1 -t utf-8 -o en_AU
+      - install -Dm644 en_AU /app/share/org.muttum.muttum/en_AU
       - >-
         cat final/english-words.* final/british-words.*
         | sort -u
-        | iconv -f iso-8859-1 -t utf-8 -o /app/share/org.muttum.muttum/en_GB
+        | iconv -f iso-8859-1 -t utf-8 -o en_GB
+      - install -Dm644 en_GB /app/share/org.muttum.muttum/en_GB
       - >-
         cat final/english-words.* final/canadian-words.*
         | sort -u
-        | iconv -f iso-8859-1 -t utf-8 -o /app/share/org.muttum.muttum/en_CA
-      - cp Copyright /app/share/org.muttum.muttum/en.license
+        | iconv -f iso-8859-1 -t utf-8 -o en_CA
+      - install -Dm644 en_CA /app/share/org.muttum.muttum/en_CA
+      - install -Dm644 Copyright /app/share/org.muttum.muttum/en.license
     sources:
       - type: archive
         url: http://downloads.sourceforge.net/wordlist/scowl-2020.12.07.tar.gz
@@ -80,20 +84,16 @@ modules:
   - name: german-words
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/share/org.muttum.muttum
       - make isowordlist-de_AT
-      - >-
-        iconv -f iso-8859-1 -t utf-8 < isowordlist-de_AT
-        > /app/share/org.muttum.muttum/de_AT
+      - iconv -f iso-8859-1 -t utf-8 -o de_AT < isowordlist-de_AT
+      - install -Dm644 de_AT /app/share/org.muttum.muttum/de_AT
       - make isowordlist-de_CH
-      - >-
-        iconv -f iso-8859-1 -t utf-8 < isowordlist-de_CH
-        > /app/share/org.muttum.muttum/de_CH
+      - iconv -f iso-8859-1 -t utf-8 -o de_CH < isowordlist-de_CH
+      - install -Dm644 de_CH /app/share/org.muttum.muttum/de_CH
       - make isowordlist-de_DE
-      - >-
-        iconv -f iso-8859-1 -t utf-8 < isowordlist-de_DE
-        > /app/share/org.muttum.muttum/de_DE
-      - cp Documentation/Copyright /app/share/org.muttum.muttum/de.license
+      - iconv -f iso-8859-1 -t utf-8 -o de_DE < isowordlist-de_DE
+      - install -Dm644 de_DE /app/share/org.muttum.muttum/de_DE
+      - install -Dm644 Documentation/Copyright /app/share/org.muttum.muttum/de.license
     sources:
       - type: archive
         url: https://j3e.de/ispell/igerman98/dict/igerman98-20161207.tar.bz2
@@ -102,9 +102,8 @@ modules:
   - name: french-words
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/share/org.muttum.muttum
-      - cp french /app/share/org.muttum.muttum/fr
-      - cp LICENSES/GPL-3.0-or-later.txt /app/share/org.muttum.muttum/fr.license
+      - install -Dm644 french /app/share/org.muttum.muttum/fr
+      - install -Dm644 LICENSES/GPL-3.0-or-later.txt /app/share/org.muttum.muttum/fr.license
     sources:
       - type: git
         url: https://salsa.debian.org/gpernot/wfrench.git
@@ -112,76 +111,10 @@ modules:
   - name: muttum.toml
     buildsystem: simple
     build-commands:
-      - mkdir -p /app/etc/xdg/org.muttum.muttum
-      - |
-        cat <<- EOF >/app/etc/xdg/org.muttum.muttum/muttum.toml
-        [[dictionaries]]
-        locales = ["de_AT", "de_CH", "de_DE"]
-        uris = [
-          "/app/share/org.muttum.muttum/de_AT",
-          "/app/share/org.muttum.muttum/de_CH",
-          "/app/share/org.muttum.muttum/de_DE",
-        ]
-        project_uri = "https://j3e.de/ispell/igerman98/"
-        repository_uri = "https://j3e.de/ispell/igerman98/dict/"
-        credits = [
-          "Daniel NABER",
-          "Werner LEMBERG",
-          "László NÉMETH",
-          "Jan SCHREIBER",
-          "Roland ROSENFELD",
-          "Till BERGER",
-          "Franz Michael BAUMANN",
-        ]
-        license = "GPL-3.0-only"
-        version = "20161207"
-        definition_url_template = "https://de.wiktionary.org/wiki/{}"
-        min_word_length = 5
-        max_word_length = 8
-        number_of_attempts = 6
-        alphabet = "latin"
-
-        [[dictionaries]]
-        locales = ["en_AU", "en_CA", "en_GB", "en_US"]
-        uris = [
-          "/app/share/org.muttum.muttum/en_AU",
-          "/app/share/org.muttum.muttum/en_CA",
-          "/app/share/org.muttum.muttum/en_GB",
-          "/app/share/org.muttum.muttum/en_US",
-        ]
-        project_uri = "http://wordlist.aspell.net/"
-        repository_uri = "http://wordlist.aspell.net/"
-        credits = [
-          "Kevin Atkinson <kevina@gnu.org>",
-          "Alan Beale <biljir@pobox.com>",
-        ]
-        license = "MIT-like"
-        version = "2020.12.07"
-        definition_url_template = "https://en.wiktionary.org/wiki/{}"
-        min_word_length = 5
-        max_word_length = 8
-        number_of_attempts = 6
-        alphabet = "latin"
-
-        [[dictionaries]]
-        locales = ["fr"]
-        uris = ["/app/share/org.muttum.muttum/fr"]
-        project_uri = "https://salsa.debian.org/gpernot/wfrench.git"
-        repository_uri = "https://salsa.debian.org/gpernot/wfrench.git"
-        credits = [
-          "guillaume pernot <gpernot@praksys.org>",
-          "Paul Leyland <pcl@ox.ac.uk>",
-          "Nicolas Sabouret <nico@debian.org>",
-          "Francois Marier <francois@debian.org>",
-        ]
-        license = "GPL-3.0-or-later"
-        version = "trixie"
-        definition_url_template = "https://fr.wiktionary.org/wiki/{}"
-        min_word_length = 5
-        max_word_length = 8
-        number_of_attempts = 6
-        alphabet = "latin"
-        EOF
+      - install -Dm644 muttum.toml /app/etc/xdg/org.muttum.muttum/muttum.toml
+    sources:
+      - type: file
+        path: muttum.toml
   - name: muttum
     buildsystem: meson
     build-options:
